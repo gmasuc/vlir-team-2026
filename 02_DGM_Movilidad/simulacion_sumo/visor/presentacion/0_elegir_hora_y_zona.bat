@@ -19,4 +19,4 @@ if %SEG% GTR 34200 set SEG=34200
 set VISTA=vista.xml
 for %%f in (presentacion\vista_%ZONA%_*.xml) do set VISTA=%%f
 echo Abriendo zona %ZONA%, se detiene a las %HORA% (segundo %SEG%)...
-start "" "C:\Users\pedri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\sumo\bin\sumo-gui.exe" -c actual_calibrado.sumocfg --gui-settings-file %VISTA% --breakpoints %SEG% --start
+start "" "%LOCALAPPDATA%\Python\pythoncore-3.14-64\Lib\site-packages\sumo\bin\sumo-gui.exe" -c actual_calibrado.sumocfg --gui-settings-file %VISTA% --breakpoints %SEG% --start
