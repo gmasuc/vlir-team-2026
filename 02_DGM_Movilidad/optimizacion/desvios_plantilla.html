@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Desvíos candidatos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+body{margin:0;font:13px "Segoe UI",Arial,sans-serif;display:flex;height:100vh}
+#lista{width:380px;overflow:auto;border-right:1px solid #ccd}
+#m{flex:1}
+.f{padding:6px 10px;border-bottom:1px solid #eef;cursor:pointer}
+.f:hover,.f.sel{background:#eef4fb}
+.t{display:inline-block;padding:0 6px;border-radius:8px;color:#fff;font-size:11px}
+.tranvía{background:#1e8449}.paralelo{background:#8e44ad}.cobertura{background:#d35400}
+h3{margin:8px 10px}
+#filtro{margin:0 10px 8px}
+</style></head><body>
+<div id="lista"><h3>Desvíos candidatos</h3>
+<div id="filtro">Tipo: <select id="tipo"><option value="">todos</option><option>tranvía</option><option>paralelo</option><option>cobertura</option></select>
+<div style="margin-top:4px;color:#555">Rojo punteado: tramo actual que se deja. Color: desvío. Gris: recorrido de la línea. Verde: paradas del tranvía.</div></div>
+<div id="filas"></div></div>
+<div id="m"></div>
+<script>
+const C=__CANDIDATOS__, LIN=__LINEAS__, TR=__TRANVIA__;
+const COL={"tranvía":"#1e8449","paralelo":"#8e44ad","cobertura":"#d35400"};
+const m=L.map('m').setView([-2.9,-79.0],13);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO'}).addTo(m);
+TR.forEach(t=>L.circleMarker([t[0],t[1]],{radius:5,color:'#1e8449',fillOpacity:.9}).bindTooltip('Tranvía: '+t[2]).addTo(m));
+let capa=L.layerGroup().addTo(m);
+function ver(c,div){
+  capa.clearLayers();document.querySelectorAll('.f').forEach(d=>d.classList.remove('sel'));if(div)div.classList.add('sel');
+  if(LIN[c.ruta])L.polyline(LIN[c.ruta],{color:'#888',weight:3,opacity:.6}).addTo(capa);
+  if(c.viejo.length)L.polyline(c.viejo,{color:'#c0392b',weight:5,dashArray:'6 6'}).addTo(capa);
+  const n=L.polyline(c.nuevo,{color:COL[c.tipo],weight:6}).addTo(capa);
+  if(c.nuevo.length)m.fitBounds(n.getBounds().pad(1.5));
+}
+function lista(){
+  const t=document.getElementById('tipo').value, F=document.getElementById('filas');F.innerHTML='';
+  C.filter(c=>!t||c.tipo==t).forEach(c=>{
+    const d=document.createElement('div');d.className='f';
+    d.innerHTML=`<b>${c.id}</b> · línea ${c.ruta.slice(1).replace('_',' ')} <span class="t ${c.tipo}">${c.tipo}</span><br>${c.objetivo}<br>+${c.extra_m} m (+${c.extra_min} min) · paradas que deja: ${c.sin}`;
+    d.onclick=()=>ver(c,d);F.appendChild(d);});
+}
+document.getElementById('tipo').onchange=lista;lista();
+</script></body></html>

@@ -1,0 +1,26 @@
+# Repositorio del proyecto VLIR-UOS TEAM 2026: SOLO código y documentación del método.
+# Los datos de la DGM son privados y NO se suben (ni crudos ni derivados), tampoco los datos de CAMF (Cumbe)
+# ni las salidas de las simulaciones. Se usa una lista de permitidos: todo se ignora salvo lo que se habilita abajo.
+
+# 1. ignorar todo
+*
+# 2. permitir recorrer las carpetas (sin esto no se puede habilitar nada dentro)
+!*/
+# 3. permitir solo código
+!*.py
+!*.bat
+!optimizacion/desvios_plantilla.html
+!02_DGM_Movilidad/optimizacion/desvios_plantilla.html
+!.gitignore
+!README_REPO.md
+
+# 4. nunca, aunque sea código: carpetas de datos, salidas y cachés
+**/__pycache__/
+02_DGM_Movilidad/datos/**
+02_DGM_Movilidad/datos_originales/**
+02_DGM_Movilidad/cache/**
+01_Cumbe/**/datos*/**
+graphify-out/**
+.vscode/**
+00_VLIR_General/**
+!/README.md
